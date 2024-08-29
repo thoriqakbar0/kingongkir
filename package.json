@@ -13,11 +13,10 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@lucia-auth/adapter-drizzle": "^1.1.0",
-    "arctic": "^1.9.2",
     "drizzle-orm": "^0.33.0",
     "framer-motion": "^11.3.31",
-    "lucia": "^3.2.0",
     "next": "14.2.7",
+    "next-auth": "beta",
     "postgres": "^3.4.4",
     "react": "^18",
     "react-dom": "^18"

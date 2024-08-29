@@ -1,12 +1,31 @@
-import Image from "next/image";
-import Link from "next/link";
 
-export default function Home() {
+import { signIn, auth } from "@/auth"
+import Image from "next/image"
+ 
+export default async function SignIn() {
+  const session = await auth()
+  
+  if (session?.user) {
+    console.log("Server-side JWT:", session.user)
+    return (
+      <div>
+        <h1>Welcome, {session.user.name}!</h1>
+        {session.user.image && (
+          <Image src={session.user.image} alt="Profile picture" width={100} height={100} />
+        )}
+        <p>You are signed in.</p>
+      </div>
+    )
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
-      <Link href="/" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Login with Google
-      </Link>
-    </main>
-  );
+    <form
+      action={async () => {
+        "use server"
+        await signIn("google")
+      }}
+    >
+      <button type="submit">Signin with Google</button>
+    </form>
+  )
 }
