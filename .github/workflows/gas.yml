@@ -25,7 +25,7 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh root@${{ secrets.SERVER_IP }} "}"
+          ssh root@${{ secrets.SERVER_IP }};
             export PATH=/root/.bun/bin:$PATH;
             cd ${{ secrets.PROJECT_PATH }} || git clone ${{ secrets.REPO_URL }} ${{ secrets.PROJECT_PATH }};
             cd ${{ secrets.PROJECT_PATH }};
