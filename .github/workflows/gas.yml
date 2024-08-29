@@ -32,15 +32,10 @@ jobs:
       - name: Deploy to server
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-            if [ -d '${{ secrets.PROJECT_PATH }}' ]; then
-              cd ${{ secrets.PROJECT_PATH }} &&
-              git fetch origin &&
-              git reset --hard origin/main
-            else
-              git clone ${{ secrets.REPO_URL }} ${{ secrets.PROJECT_PATH }}
-              cd ${{ secrets.PROJECT_PATH }}
-            fi &&
-            bun install &&
-            bun run build &&
+            cd ${{ secrets.PROJECT_PATH }} || git clone ${{ secrets.REPO_URL }} ${{ secrets.PROJECT_PATH }};
+            cd ${{ secrets.PROJECT_PATH }};
+            git pull origin main;
+            bun install;
+            bun run build;
             bun run start -p ${{ secrets.SERVER_PORT }}
           "
