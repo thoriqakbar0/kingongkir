@@ -29,11 +29,12 @@ jobs:
             export PATH=/root/.bun/bin:$PATH || { echo 'Failed to set PATH'; exit 1; }
             cd ${{ secrets.PROJECT_PATH }} || { echo 'Failed to change directory'; exit 1; }
             git pull origin main || { echo 'Failed to pull latest changes'; exit 1; }
-            pid=$(lsof -ti:${{ secrets.PORT }}) && kill -9 $pid || true
             bun install || { echo 'Failed to install dependencies'; exit 1; }
             bun run build || { echo 'Failed to build the project'; exit 1; }
+            pid=$(lsof -ti:${{ secrets.PORT }}) && kill -9 $pid || true
             for i in {1..5}; do
               if ! lsof -ti:${{ secrets.PORT }}; then
+                pid=$(lsof -ti:${{ secrets.PORT }}) && kill -9 $pid || true
                 nohup bun run start -p ${{ secrets.PORT }} > app.log 2>&1 &
                 sleep 5
                 if grep -q 'Ready in' app.log; then
