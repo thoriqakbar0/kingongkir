@@ -27,6 +27,7 @@ jobs:
         run: |
           ssh root@${{ secrets.SERVER_IP }} "
             export PATH=/root/.bun/bin:$PATH || { echo 'Failed to set PATH'; exit 1; }
+            mkdir -p ${{ secrets.PROJECT_PATH }} || { echo 'Failed to create directory'; exit 1; }
             cd ${{ secrets.PROJECT_PATH }} || { echo 'Failed to change directory'; exit 1; }
             git pull origin main || { echo 'Failed to pull latest changes'; exit 1; }
             bun install || { echo 'Failed to install dependencies'; exit 1; }
