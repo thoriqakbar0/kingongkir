@@ -24,12 +24,13 @@ jobs:
             export PATH=/root/.bun/bin:$PATH;
             cd ${{ secrets.PROJECT_PATH }} || git clone ${{ secrets.REPO_URL }} ${{ secrets.PROJECT_PATH }};
             cd ${{ secrets.PROJECT_PATH }};
+            git fetch origin
             git pull origin main;
             rm -f .env
             echo '${{ secrets.ENV_VAR }}' > .env;
             bun install || { echo 'Installation failed'; exit 1; }
             bun run build || { echo 'Build failed'; exit 1; }
             pid=$(lsof -t -i:${{ secrets.PORT }}) && kill -9 $pid || true;
-            nohup bun run start -p ${{ secrets.PORT }} > app.log 2>&1 &
-            echo 'Application started successfully'
+            nohup bun run start -p ${{ secrets.PORT }} &
+            echo 'Application started successfully' || { echo 'Application start failed'; exit 1; }
           "
