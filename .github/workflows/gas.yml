@@ -32,11 +32,11 @@ jobs:
       - name: Deploy to server
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-            source ~/.bashrc;
+            export PATH=$HOME/.bun/bin:$PATH;
             cd ${{ secrets.PROJECT_PATH }} || git clone ${{ secrets.REPO_URL }} ${{ secrets.PROJECT_PATH }};
             cd ${{ secrets.PROJECT_PATH }};
             git pull origin main;
-            bun install;
-            bun run build;
-            bun run start -p ${{ secrets.SERVER_PORT }}
+            $HOME/.bun/bin/bun install;
+            $HOME/.bun/bin/bun run build;
+            $HOME/.bun/bin/bun run start -p ${{ secrets.SERVER_PORT }}
           "
