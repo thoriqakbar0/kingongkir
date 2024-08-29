@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
 
 jobs:
   lint-and-deploy:
@@ -24,13 +29,18 @@ jobs:
             export PATH=/root/.bun/bin:$PATH;
             cd ${{ secrets.PROJECT_PATH }} || git clone ${{ secrets.REPO_URL }} ${{ secrets.PROJECT_PATH }};
             cd ${{ secrets.PROJECT_PATH }};
-            git fetch origin
+            git fetch origin;
             git pull origin main;
-            rm -f .env
+            rm -f .env;
             echo '${{ secrets.ENV_VAR }}' > .env;
             bun install || { echo 'Installation failed'; exit 1; }
             bun run build || { echo 'Build failed'; exit 1; }
-            pid=$(lsof -t -i:${{ secrets.PORT }}) && kill -9 $pid || true;
-            bun run start -p ${{ secrets.PORT }} &
-            { echo 'Application start sucesfully'; exit 1; } || { echo 'Application start failed'; exit 1; }
+            pid=\$(lsof -t -i:${{ secrets.PORT }}) && kill -9 \$pid || true;
+            if bun run start -p ${{ secrets.PORT }} &; then
+              echo 'Application started successfully';
+              exit 0;  # Successful exit
+            else
+              echo 'Application start failed';
+              exit 1;  # Exit with error code
+            fi
           "
