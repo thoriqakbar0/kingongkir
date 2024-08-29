@@ -32,6 +32,7 @@ jobs:
       - name: Deploy to server
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+            source ~/.bashrc;
             cd ${{ secrets.PROJECT_PATH }} || git clone ${{ secrets.REPO_URL }} ${{ secrets.PROJECT_PATH }};
             cd ${{ secrets.PROJECT_PATH }};
             git pull origin main;
