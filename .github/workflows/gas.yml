@@ -31,6 +31,6 @@ jobs:
             bun install || { echo 'Installation failed'; exit 1; }
             bun run build || { echo 'Build failed'; exit 1; }
             pid=$(lsof -t -i:${{ secrets.PORT }}) && kill -9 $pid || true;
-            nohup bun run start -p ${{ secrets.PORT }} &
-            echo 'Application started successfully' || { echo 'Application start failed'; exit 1; }
+            bun run start -p ${{ secrets.PORT }} &
+            { echo 'Application start sucesfully'; exit 1; } || { echo 'Application start failed'; exit 1; }
           "
