@@ -31,7 +31,7 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh root@1${{ secrets.SERVER_IP }} "
+          ssh root@${{ secrets.SERVER_IP }} "
             export PATH=/root/.bun/bin:$PATH;
             echo 'Current PATH:' $PATH;
             which bun || echo 'Bun not found in PATH';
