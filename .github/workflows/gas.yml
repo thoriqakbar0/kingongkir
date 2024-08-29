@@ -41,5 +41,5 @@ jobs:
             git pull origin main;
             /root/.bun/bin/bun install || echo 'Bun install failed';
             /root/.bun/bin/bun run build || echo 'Bun build failed';
-            /root/.bun/bin/bun run start -p ${{ secrets.PORT }} > /dev/null 2>&1 && echo 'Server started successfully' || echo 'Server failed to start';
+            /root/.bun/bin/bun run start -p ${{ secrets.PORT }} && echo 'Server started successfully' || echo 'Server failed to start';
           "
