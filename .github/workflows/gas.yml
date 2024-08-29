@@ -29,7 +29,11 @@ jobs:
             export PATH=/root/.bun/bin:$PATH || { echo 'Failed to set PATH'; exit 1; }
             mkdir -p ${{ secrets.PROJECT_PATH }} || { echo 'Failed to create directory'; exit 1; }
             cd ${{ secrets.PROJECT_PATH }} || { echo 'Failed to change directory'; exit 1; }
-            git pull origin main || { echo 'Failed to pull latest changes'; exit 1; }
+            if [ -d .git ]; then
+              git pull origin main || { echo 'Failed to pull latest changes'; exit 1; }
+            else
+              git clone ${{ secrets.REPO_URL }} . || { echo 'Failed to clone repository'; exit 1; }
+            fi
             bun install || { echo 'Failed to install dependencies'; exit 1; }
             bun run build || { echo 'Failed to build the project'; exit 1; }
             pid=$(lsof -ti:${{ secrets.PORT }}) && kill -9 $pid || true
