@@ -31,12 +31,15 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh root@143.198.200.189 "
-            source /root/.bashrc;
+          ssh root@1${{ secrets.SERVER_IP }} "
+            export PATH=/root/.bun/bin:$PATH;
+            echo 'Current PATH:' $PATH;
+            which bun || echo 'Bun not found in PATH';
+            bun -v || echo 'Bun version check failed';
             cd ${{ secrets.PROJECT_PATH }} || git clone ${{ secrets.REPO_URL }} ${{ secrets.PROJECT_PATH }};
             cd ${{ secrets.PROJECT_PATH }};
             git pull origin main;
-            bun install;
-            bun run build;
-            bun run start -p ${{ secrets.SERVER_PORT }}
+            /root/.bun/bin/bun install || echo 'Bun install failed';
+            /root/.bun/bin/bun run build || echo 'Bun build failed';
+            /root/.bun/bin/bun run start -p ${{ secrets.SERVER_PORT }} || echo 'Bun start failed';
           "
