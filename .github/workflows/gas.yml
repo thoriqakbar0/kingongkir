@@ -33,13 +33,12 @@ jobs:
         run: |
           ssh root@${{ secrets.SERVER_IP }} "
             export PATH=/root/.bun/bin:$PATH;
-            echo 'Current PATH:' $PATH;
-            which bun || echo 'Bun not found in PATH';
-            bun -v || echo 'Bun version check failed';
             cd ${{ secrets.PROJECT_PATH }} || git clone ${{ secrets.REPO_URL }} ${{ secrets.PROJECT_PATH }};
             cd ${{ secrets.PROJECT_PATH }};
             git pull origin main;
-            /root/.bun/bin/bun install || echo 'Bun install failed';
-            /root/.bun/bin/bun run build || echo 'Bun build failed';
-            /root/.bun/bin/bun run start -p ${{ secrets.PORT }} && echo 'Server started successfully' || echo 'Server failed to start';
+            pid=$(lsof -t -i:${{ secrets.PORT }}) && kill -9 $pid || true;
+            bun install;
+            bun run build;
+            nohup bun run start -p ${{ secrets.PORT }} > app.log 2>&1 &
+            echo 'Application started successfully'
           "
