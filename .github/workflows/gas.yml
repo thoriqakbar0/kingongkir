@@ -9,29 +9,35 @@ jobs:
   lint-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v1
-      with:
-        bun-version: latest
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
 
-    - name: Install dependencies
-      run: bun install
+      - name: Install dependencies
+        run: bun install
 
-    - name: Run linting
-      run: bun run lint
+      - name: Run linting
+        run: bun run lint
 
-    - name: Build application
-      run: bun run build
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-    - name: Install SSH key
-      uses: shimataro/ssh-key-action@v2
-      with:
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        known_hosts: ${{ secrets.KNOWN_HOSTS }}
-
-    - name: Deploy to server
-      run: |
-        ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd ${{ secrets.PROJECT_PATH }} && git pull origin main && bun install && bun run build && bun run start"
+      - name: Deploy to server
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+            if [ ! -d '${{ secrets.PROJECT_PATH }}' ]; then
+              git clone  ${{ secrets.PROJECT_PATH }};
+            fi
+            cd ${{ secrets.PROJECT_PATH }} &&
+            git pull origin main &&
+            bun install &&
+            bun run build &&
+            bun run start -p ${{ secrets.PORT }}
+          "
