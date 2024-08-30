@@ -75,6 +75,7 @@ export function OngkirSearchEngine() {
       const searchResults = await searchSubdistrict(searchTerm);
       // @ts-ignore
       setResults(searchResults);
+      console.log(searchResults)
     } catch (error) {
       console.error('Error searching for subdistrict:', error);
     } finally {

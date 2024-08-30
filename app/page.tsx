@@ -70,7 +70,6 @@ export default async function Navbar() {
         </div>
       </nav>
       <Banner />
-      <OngkirSearchEngine />
     </div>
   );
 }

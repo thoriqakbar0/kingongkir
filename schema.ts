@@ -16,7 +16,7 @@ import { drizzle } from "drizzle-orm/neon-serverless";
 const connectionString = process.env.AUTH_DRIZZLE_URL!;
 
 const pool = new Pool({ connectionString });
-const dot = pgSchema("dot_assignmnent");
+const dot = pgSchema("dot_assignment");
 export const db = drizzle(pool);
 
 export const users = pgTable("user", {
@@ -112,5 +112,4 @@ export const districts = dot.table("tb_ro_subdistricts", {
   id: integer("subdistrict_id").primaryKey(),
   cityId: integer("city_id").references(() => cities.id),
   name: text("subdistrict_name"),
-
 });
