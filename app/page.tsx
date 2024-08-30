@@ -2,6 +2,7 @@ import { signIn, signOut, auth } from "@/auth";
 import Image from "next/image";
 import Link from "next/link";
 import Banner from "@/component/Banner";
+import { OngkirSearchEngine } from "@/component/OngkirSearchEngine";
 
 export default async function Navbar() {
   const session = await auth();
@@ -69,6 +70,7 @@ export default async function Navbar() {
         </div>
       </nav>
       <Banner />
+      <OngkirSearchEngine />
     </div>
   );
 }

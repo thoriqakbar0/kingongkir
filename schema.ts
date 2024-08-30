@@ -5,19 +5,19 @@ import {
   text,
   primaryKey,
   integer,
-  pgSchema
+  pgSchema,
+  char
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
-import { Pool } from '@neondatabase/serverless'
-import { drizzle } from 'drizzle-orm/neon-serverless'
+import { Pool } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-serverless";
 
-const connectionString = process.env.AUTH_DRIZZLE_URL!
+const connectionString = process.env.AUTH_DRIZZLE_URL!;
 
-
-const pool = new Pool({ connectionString })
-export const db = drizzle(pool)
-
+const pool = new Pool({ connectionString });
+const dot = pgSchema("dot_assignmnent");
+export const db = drizzle(pool);
 
 export const users = pgTable("user", {
   id: text("id")
@@ -95,3 +95,22 @@ export const authenticators = pgTable(
     }),
   })
 );
+
+export const provinces = dot.table("tb_ro_provinces", {
+  id: integer("province_id").primaryKey(),
+  name: text("province_name"),
+});
+
+export const cities = dot.table("tb_ro_cities", {
+  id: integer("city_id").primaryKey(),
+  provinceId: integer("province_id").references(() => provinces.id),
+  name: text("city_name"),
+  postalCode: char("postal_code"),
+});
+
+export const districts = dot.table("tb_ro_subdistricts", {
+  id: integer("subdistrict_id").primaryKey(),
+  cityId: integer("city_id").references(() => cities.id),
+  name: text("subdistrict_name"),
+
+});
